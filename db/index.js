@@ -15,6 +15,8 @@ const School = conn.define('school', {
   }
 });
 
+Student.belongsTo(School);
+
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });
   const [apex, acme ] = await Promise.all(
@@ -33,6 +35,11 @@ const syncAndSeed = async()=> {
     ]
     .map(student => Student.create(student)) 
   )
+  await Promise.all([
+    moe.update({ schoolId: acme.id }),
+    lucy.update({ schoolId: acme.id }),
+    larry.update({ schoolId: apex.id })
+  ]);
 };
 
 module.exports = {

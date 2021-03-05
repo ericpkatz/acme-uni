@@ -4,6 +4,9 @@ import { Provider, connect } from 'react-redux';
 import { Route, HashRouter } from 'react-router-dom';
 import store, { fetchStudents, fetchSchools } from './store';
 import Nav from './Nav';
+import Schools from './Schools';
+import Students from './Students';
+import Home from './Home';
 
 
 
@@ -17,6 +20,9 @@ class _App extends Component{
       <HashRouter>
         <div>
           <Route component={ Nav } />
+          <Route path='/' exact component={ Home } />
+          <Route path='/schools' component={ Schools } />
+          <Route path='/students' component={ Students } />
         </div>
       </HashRouter>
     );
