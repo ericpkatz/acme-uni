@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 const { models: { School, Student }} = require('./db');
 const path = require('path');
 
@@ -14,6 +15,24 @@ app.get('/', async(req, res, next)=> {
 app.get('/api/schools', async(req, res, next)=> {
   try {
     res.send(await School.findAll());
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.post('/api/schools', async(req, res, next)=> {
+  try {
+    res.status(201).send(await School.create(req.body));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.post('/api/students', async(req, res, next)=> {
+  try {
+    res.status(201).send(await Student.create(req.body));
   }
   catch(ex){
     next(ex);
