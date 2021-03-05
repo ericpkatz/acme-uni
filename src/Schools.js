@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { deleteSchool } from './store';
 
-const Schools = ({ schools })=> {
+const Schools = ({ schools, deleteSchool })=> {
   return (
     <ul>
       {
@@ -21,6 +22,7 @@ const Schools = ({ schools })=> {
                     );
                   })
                 }
+                <button onClick={ ()=> deleteSchool(school)}>Delete</button>
               </ul>
             </li>
           );
@@ -38,6 +40,11 @@ export default connect(
           ...school, students: students.filter( student=> student.schoolId === school.id )
         };
       })
+    };
+  },
+  (dispatch)=> {
+    return {
+      deleteSchool: (school)=> dispatch(deleteSchool(school))
     };
   }
 )(Schools);

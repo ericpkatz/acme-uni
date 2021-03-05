@@ -4,9 +4,21 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
 const SET_STUDENTS = 'SET_STUDENTS';
-const SET_SCHOOLS = 'SET_SCHOOLS';
 const CREATE_STUDENT = 'CREATE_STUDENT';
-const CREATE_SCHOOL = 'CREATE_SCHOOL';
+const DELETE_STUDENT = 'DELETE_STUDENT';
+
+const studentsReducer = (state = [], action)=> {
+  if(action.type === 'SET_STUDENTS'){
+    return action.students;
+  }
+  if(action.type === 'CREATE_STUDENT'){
+    return [...state, action.student];
+  }
+  if(action.type === 'DELETE_STUDENT'){
+    return state.filter( student => student.id !== action.student.id); 
+  }
+  return state;
+};
 
 const setStudents = (students)=> {
   return {
@@ -22,29 +34,16 @@ const _createStudent = (student)=> {
   };
 };
 
-const _createSchool = (school)=> {
+const _deleteStudent = (student)=> {
   return {
-    school,
-    type: CREATE_SCHOOL
+    student,
+    type: DELETE_STUDENT
   };
 };
 
-const setSchools = (schools)=> {
-  return {
-    type: SET_SCHOOLS,
-    schools
-  };
-};
-
-const studentsReducer = (state = [], action)=> {
-  if(action.type === 'SET_STUDENTS'){
-    return action.students;
-  }
-  if(action.type === 'CREATE_STUDENT'){
-    return [...state, action.student];
-  }
-  return state;
-};
+const SET_SCHOOLS = 'SET_SCHOOLS';
+const CREATE_SCHOOL = 'CREATE_SCHOOL';
+const DELETE_SCHOOL = 'DELETE_SCHOOL';
 
 const schoolsReducer = (state = [], action)=> {
   if(action.type === 'SET_SCHOOLS'){
@@ -53,7 +52,32 @@ const schoolsReducer = (state = [], action)=> {
   if(action.type === 'CREATE_SCHOOL'){
     return [...state, action.school];
   }
+  if(action.type === 'DELETE_SCHOOL'){
+    return state.filter( school => school.id !== action.school.id); 
+  }
   return state;
+};
+
+
+const setSchools = (schools)=> {
+  return {
+    type: SET_SCHOOLS,
+    schools
+  };
+};
+
+const _createSchool = (school)=> {
+  return {
+    school,
+    type: CREATE_SCHOOL
+  };
+};
+
+const _deleteSchool = (school)=> {
+  return {
+    school,
+    type: DELETE_SCHOOL
+  };
 };
 
 const reducer = combineReducers({
@@ -84,6 +108,20 @@ export const createStudent = (student)=> {
 export const createSchool = (school)=> {
   return async(dispatch)=> {
     dispatch(_createSchool((await axios.post('/api/schools', school)).data));
+  };
+};
+
+export const deleteStudent = (student)=> {
+  return async(dispatch)=> {
+    await axios.delete(`/api/students/${student.id}`);
+    dispatch(_deleteStudent(student));
+  };
+};
+
+export const deleteSchool = (school)=> {
+  return async(dispatch)=> {
+    await axios.delete(`/api/schools/${school.id}`);
+    dispatch(_deleteSchool(school));
   };
 };
 
