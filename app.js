@@ -50,6 +50,16 @@ app.post('/api/students', async(req, res, next)=> {
   }
 });
 
+app.put('/api/students/:id', async(req, res, next)=> {
+  try {
+    const student = await Student.findByPk(req.params.id);
+    res.send(await student.update(req.body));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 app.get('/api/students', async(req, res, next)=> {
   try {
     res.send(await Student.findAll());

@@ -22,8 +22,8 @@ const Schools = ({ schools, deleteSchool })=> {
                     );
                   })
                 }
-                <button onClick={ ()=> deleteSchool(school)}>Delete</button>
               </ul>
+              <button onClick={ ()=> deleteSchool(school)}>Delete</button>
             </li>
           );
         })

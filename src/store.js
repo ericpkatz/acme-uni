@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 const SET_STUDENTS = 'SET_STUDENTS';
 const CREATE_STUDENT = 'CREATE_STUDENT';
 const DELETE_STUDENT = 'DELETE_STUDENT';
+const UPDATE_STUDENT = 'UPDATE_STUDENT';
 
 const studentsReducer = (state = [], action)=> {
   if(action.type === 'SET_STUDENTS'){
@@ -16,6 +17,12 @@ const studentsReducer = (state = [], action)=> {
   }
   if(action.type === 'DELETE_STUDENT'){
     return state.filter( student => student.id !== action.student.id); 
+  }
+  if(action.type === 'UPDATE_STUDENT'){
+    return state.map( student => student.id === action.student.id ? action.student : student); 
+  }
+  if(action.type === 'DELETE_SCHOOL'){
+    return state.map( student => student.schoolId === action.school.id ? {...student, schoolId: null }: student); 
   }
   return state;
 };
@@ -31,6 +38,13 @@ const _createStudent = (student)=> {
   return {
     student,
     type: CREATE_STUDENT
+  };
+};
+
+const _updateStudent = (student)=> {
+  return {
+    student,
+    type: UPDATE_STUDENT
   };
 };
 
@@ -96,6 +110,12 @@ export const fetchSchools = ()=> {
 export const fetchStudents = ()=> {
   return async(dispatch)=> {
     dispatch(setStudents((await axios.get('/api/students')).data));
+  };
+};
+
+export const updateStudent = (student)=> {
+  return async(dispatch)=> {
+    dispatch(_updateStudent((await axios.put(`/api/students/${student.id}`, student)).data));
   };
 };
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteStudent } from './store';
+import { deleteStudent, updateStudent } from './store';
 
-const Students = ({ students, deleteStudent })=> {
+const Students = ({ students, deleteStudent, schools, updateStudent })=> {
   return (
     <ul>
       {
@@ -12,11 +12,16 @@ const Students = ({ students, deleteStudent })=> {
               {
                 student.name
               }
-              <span>
-              {
-                student.school ?  student.school.name : 'not enrolled'
-              }
-              </span>
+             <select onChange={ (ev)=> updateStudent({...student, schoolId: ev.target.value || null})}>
+                <option value=''>Not Enrolled</option>
+                {
+                  schools.map( school => {
+                    return (
+                      <option key={ school.id } value={ school.id } selected={ school.id === student.schoolId}>{ school.name }</option>
+                    );
+                  })
+                }
+             </select>
              <button onClick={ ()=> deleteStudent(student)}>Delete</button>
             </li>
           );
@@ -29,6 +34,7 @@ const Students = ({ students, deleteStudent })=> {
 export default connect(
   ({ students, schools })=> {
     return {
+      schools,
       students: students.map( student => {
         return {...student, school: schools.find(school => school.id == student.schoolId) };
       })
@@ -36,7 +42,8 @@ export default connect(
   },
   (dispatch)=> {
     return {
-      deleteStudent: (student)=> dispatch(deleteStudent(student)) 
+      deleteStudent: (student)=> dispatch(deleteStudent(student)),
+      updateStudent: (student)=> dispatch(updateStudent(student))
     };
   }
 )(Students);

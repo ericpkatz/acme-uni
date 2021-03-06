@@ -5,6 +5,9 @@
 body {
   font-family: verdana;
 }
+button, select {
+  height: 2rem;
+}
 nav {
   display: flex;
   justify-content: space-around;
@@ -21,6 +24,15 @@ li span {
   background-color: cornSilk;
   font-size: 0.75rem;
   margin: 0.5rem;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+}
+
+li > * {
+  margin: 0.5rem 0;
 }
 </style>
   </head>
